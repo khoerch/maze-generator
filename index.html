@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Puzzle Viz Square</title>
+        <title>Puzzle Viz Theta</title>
         <meta charset="utf-8">
         <meta name="description" content="Puzzle Viz">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,10 +12,11 @@
 
     <body>
       <div>
-        <canvas id="depthFirstSearch"></canvas>
+        <canvas id="maze"></canvas>
+        
         <ul>
-          <li><label>Width:</label><input id=width type="text"/></li>
-          <li><label>Height:</label><input id=height type="text"/></li>
+          <li><label>Rings:</label><input id=rings type="text"/></li>
+          <li><label>Paths from center:</label><input id=pathsFromCenter type="text"/></li>
           <li><label>Path Width:</label><input id=pathwidth type="text"/></li>
           <li><label>Wall Width:</label><input id=wallwidth type="text"/></li>
           <li><label>Outer Width:</label><input id=outerwidth type="text"/></li>
@@ -24,7 +25,8 @@
           <li><label>Seed:</label><input id=seed type="text"/></li>
           <li><input id=randomseed type="button" value="Random Seed"/></li>
         </ul>
+      </div> 
 
-      <script type="text/javascript" src="depthFirst.js"></script>
+      <script type="text/javascript" src="script.js"></script>
     </body>
 </html>

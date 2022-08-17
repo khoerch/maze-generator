@@ -9,13 +9,13 @@ body{
   text-align: center;
 }
 div{
-  display: inline-block;
+  display: flex;
   margin: 20px auto 0 auto;
   position: relative;
 }
 ul{
   position: absolute;
-  right: 0;
+  right: 10;
   width: 220px;
   height: 100%;
   float: left;
