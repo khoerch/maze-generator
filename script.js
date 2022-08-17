@@ -1,35 +1,14 @@
 import { defaults } from './defaults.js';
+import { degreesToRadians, getFactorsOfTwo, randomNumberGenerator } from './utils.js';
 
-const { pathWidth, wall, outerWall, rings, pointsFromCenter, delay, seed, wallColor, pathColor } = defaults;
+let { pathWidth, wall, outerWall, rings, pointsFromCenter, delay, seed, wallColor, pathColor } = defaults;
 
 let r = 0 //Radial starting position from center
 let t = 0 //Angular starting position from center
 const map = []
 let route = [];
 let random, canvas, ctx, timer;
-
-const factorsOfTwo = (rings) => {
-  let array = [2]
-  let x = 0
-  while (array[x] <= rings) {
-    x++
-    array.push(Math.pow(2, x+1))
-  }
-  return array
-}
-const doubleSets = factorsOfTwo(rings)
-
-const degreesToRadians = (angleInDegrees) => {
-  return (Math.PI * angleInDegrees) / 180;
-}
-
-const randomGen = function(seed){
-	if(seed===undefined)var seed=performance.now()
-	return function(){
-    seed = (seed * 9301 + 49297) % 233280
-		return seed/233280
-	}
-}
+const doubleSets = getFactorsOfTwo(rings);
 
 const init = function(){
   canvas = document.getElementById('maze')
@@ -41,7 +20,7 @@ const init = function(){
   ctx.fillStyle = wallColor
   ctx.fill()
   // Until you change the seed (through page refresh or button), mazes recreated with same height and width will be the same
-  random = randomGen(seed)
+  random = randomNumberGenerator(seed)
   ctx.strokeStyle = pathColor
   ctx.lineCap = 'round'
   ctx.lineWidth = pathWidth

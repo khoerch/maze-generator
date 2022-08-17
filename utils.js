@@ -12,3 +12,12 @@ export const getFactorsOfTwo = (num) => {
 
   return array;
 };
+
+export const randomNumberGenerator = (seed) => {
+	if (seed === undefined) seed = performance.now();
+
+	return function() {
+    seed = (seed * 9301 + 49297) % 233280;
+		return seed / 233280;
+	}
+}
