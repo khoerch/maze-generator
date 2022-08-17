@@ -1,4 +1,5 @@
 import { defaults } from './defaults.js';
+import { MazeGenerator } from './maze-generator.js';
 import { degreesToRadians, getFactorsOfTwo, randomNumberGenerator } from './utils.js';
 
 let { pathWidth, wall, outerWall, rings, pointsFromCenter, delay, seed, wallColor, pathColor } = defaults;
@@ -9,6 +10,8 @@ const map = []
 let route = [];
 let random, canvas, ctx, timer;
 const doubleSets = getFactorsOfTwo(rings);
+
+const maze = new MazeGenerator();
 
 const init = function(){
   canvas = document.getElementById('maze')
