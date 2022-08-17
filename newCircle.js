@@ -4,7 +4,7 @@
 pathWidth = 15       //Width of the Maze Path
 wall = 8            //Width of the Walls between Paths
 outerWall = 8        //Width of the Outer most wall
-rings = 8          //Number of concentric rings surrounding center
+rings = 6          //Number of concentric rings surrounding center
 pointsFromCenter = 4          //How many paths diverge from center
 delay = 1            //Delay between algorithm cycles
 let r = 0        //Radial starting position from center
@@ -42,11 +42,11 @@ randomGen = function(seed){
 
 init = function(){
   canvas = document.getElementById('circles')
-  canvas.width = mazeDiameter
-  canvas.height = mazeDiameter
+  canvas.width = outerWall*2 + pathWidth + 2*rings*(pathWidth+wall)
+  canvas.height = outerWall*2 + pathWidth + 2*rings*(pathWidth+wall)
   ctx = canvas.getContext('2d')
 
-  ctx.arc(mazeDiameter/2, mazeDiameter/2, mazeDiameter/2, 0, Math.PI * 2, false);
+  ctx.arc(canvas.width/2, canvas.width/2, canvas.width/2, 0, Math.PI * 2, false);
   ctx.fillStyle = wallColor
   ctx.fill()
   // Until you change the seed (through page refresh or button), mazes recreated with same height and width will be the same
@@ -83,7 +83,7 @@ init = function(){
   }
 
   route = [[r,t]]
-  ctx.moveTo(mazeDiameter/2, mazeDiameter/2)
+  ctx.moveTo(canvas.width/2, canvas.width/2)
 }
 init()
 
@@ -200,8 +200,8 @@ loop = function(){
     if (route.length>0) {
       let radius = route[route.length-1][0] * (pathWidth+wall)
       let theta = degreesToRadians(map[route[route.length-1][0]][route[route.length-1][1]].angle)
-      let lastX = radius * Math.cos(theta) + mazeDiameter / 2
-      let lastY = radius * Math.sin(theta) + mazeDiameter / 2
+      let lastX = radius * Math.cos(theta) + canvas.width / 2
+      let lastY = radius * Math.sin(theta) + canvas.width / 2
       ctx.moveTo(lastX, lastY)
       timer = setTimeout(loop,delay)
     }
@@ -226,26 +226,26 @@ loop = function(){
   }
 
   if (isArc) {
-    ctx.arc(mazeDiameter/2, mazeDiameter/2, radius, lastAngle, theta, counterClockwise)
+    ctx.arc(canvas.width/2, canvas.width/2, radius, lastAngle, theta, counterClockwise)
     ctx.stroke()
   } else if (arcThenLine) {
     // Going from ring with x cells to ring with 2x cells
-    let newX = radius * Math.cos(theta) + mazeDiameter / 2
-    let newY = radius * Math.sin(theta) + mazeDiameter / 2
-    ctx.arc(mazeDiameter/2, mazeDiameter/2, oldRadius, lastAngle, theta, counterClockwise)
+    let newX = radius * Math.cos(theta) + canvas.width / 2
+    let newY = radius * Math.sin(theta) + canvas.width / 2
+    ctx.arc(canvas.width/2, canvas.width/2, oldRadius, lastAngle, theta, counterClockwise)
     ctx.lineTo(newX, newY)
     ctx.stroke()
 
   } else if (lineThenArc) {
     // Going from ring with x cells to ring with x/2 cells
-    let newX = radius * Math.cos(lastAngle) + mazeDiameter / 2
-    let newY = radius * Math.sin(lastAngle) + mazeDiameter / 2
+    let newX = radius * Math.cos(lastAngle) + canvas.width / 2
+    let newY = radius * Math.sin(lastAngle) + canvas.width / 2
     ctx.lineTo(newX, newY)
-    ctx.arc(mazeDiameter/2, mazeDiameter/2, radius, lastAngle, theta, counterClockwise)
+    ctx.arc(canvas.width/2, canvas.width/2, radius, lastAngle, theta, counterClockwise)
     ctx.stroke()
   } else {
-    let newX = radius * Math.cos(theta) + mazeDiameter / 2
-    let newY = radius * Math.sin(theta) + mazeDiameter / 2
+    let newX = radius * Math.cos(theta) + canvas.width / 2
+    let newY = radius * Math.sin(theta) + canvas.width / 2
     ctx.lineTo(newX, newY)
     ctx.stroke()
   }
@@ -256,46 +256,3 @@ loop = function(){
 settings.display()
 loop()
 setInterval(settings.check,400)
-
-// Listen for mouse moves
-canvas.addEventListener('mousemove', function(event) {
-  result.innerText = ctx.isPointInStroke(event.offsetX, event.offsetY)
-  xPos.innerText = event.clientX + ", " + event.offsetX
-  yPos.innerText = event.clientY + ", " + event.offsetY
-});
-
-// Listen for arrow keys
-let currentRing = 0
-let currentAngle = 0
-const detectKey = (e) => {
-  const posTop = document.getElementById('circles').offsetTop;
-  const screenX = document.getElementById('circles').clientWidth / 2 + rChange
-  const screenY = document.getElementById('circles').clientHeight / 2 + tChange
-  const moveDist = pathWidth + wall
-
-  const checkUp = ctx.isPointInStroke(screenX, screenY - moveDist/2)
-  const checkDown = ctx.isPointInStroke(screenX, screenY + moveDist/2)
-  let angleOptions = 360 / map[currentRing+1].length
-  console.log('hello', angleOptions)
-
-  e = e || window.event;
-  if (e.keyCode == '38' && checkUp) {
-    // up arrow
-    tChange -= moveDist
-    document.getElementById('circles').style.top  = (posTop+moveDist)+"px";
-  } else if (e.keyCode == '40' && checkDown) {
-    // down arrow
-    tChange += moveDist
-    document.getElementById('circles').style.top  = (posTop-moveDist)+"px";
-  } else if (e.keyCode == '37') {
-    // left arrow
-    currentAngle -= angleOptions
-    document.getElementById('circles').style.transform  = `rotate(${currentAngle}deg)`;
-  } else if (e.keyCode == '39') {
-    // right arrow
-    currentAngle += angleOptions
-    document.getElementById('circles').style.transform  = `rotate(${currentAngle}deg)`;
-  }
-}
-
-document.onkeydown = detectKey
