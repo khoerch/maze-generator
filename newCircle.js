@@ -41,7 +41,7 @@ randomGen = function(seed){
 }
 
 init = function(){
-  canvas = document.getElementById('circles')
+  canvas = document.getElementById('maze')
   canvas.width = outerWall*2 + pathWidth + 2*rings*(pathWidth+wall)
   canvas.height = outerWall*2 + pathWidth + 2*rings*(pathWidth+wall)
   ctx = canvas.getContext('2d')
