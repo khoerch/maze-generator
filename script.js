@@ -1,21 +1,12 @@
-// credit for first puzzle example. adapted for a circular (theta) maze:
-// https://codepen.io/GabbeV/pen/viAec
+import { defaults } from './defaults.js';
 
-pathWidth = 15       //Width of the Maze Path
-wall = 8            //Width of the Walls between Paths
-outerWall = 8        //Width of the Outer most wall
-rings = 6          //Number of concentric rings surrounding center
-pointsFromCenter = 4          //How many paths diverge from center
-delay = 1            //Delay between algorithm cycles
-let r = 0        //Radial starting position from center
-let t = 0       //Angular starting position from center
-seed = Math.random()*100000|0//Seed for random numbers
-wallColor = '#d24'   //Color of the walls
-pathColor = '#222a33'//Color of the path
-const mazeDiameter = outerWall*2 + pathWidth + 2*rings*(pathWidth+wall)
+const { pathWidth, wall, outerWall, rings, pointsFromCenter, delay, seed, wallColor, pathColor } = defaults;
+
+let r = 0 //Radial starting position from center
+let t = 0 //Angular starting position from center
 const map = []
-let rChange = 0
-let tChange = 0
+let route = [];
+let random, canvas, ctx, timer;
 
 const factorsOfTwo = (rings) => {
   let array = [2]
@@ -32,7 +23,7 @@ const degreesToRadians = (angleInDegrees) => {
   return (Math.PI * angleInDegrees) / 180;
 }
 
-randomGen = function(seed){
+const randomGen = function(seed){
 	if(seed===undefined)var seed=performance.now()
 	return function(){
     seed = (seed * 9301 + 49297) % 233280
@@ -40,7 +31,7 @@ randomGen = function(seed){
 	}
 }
 
-init = function(){
+const init = function(){
   canvas = document.getElementById('maze')
   canvas.width = outerWall*2 + pathWidth + 2*rings*(pathWidth+wall)
   canvas.height = outerWall*2 + pathWidth + 2*rings*(pathWidth+wall)
@@ -87,17 +78,17 @@ init = function(){
 }
 init()
 
-inputRings = document.getElementById('rings')
-inputPathsFromCenter = document.getElementById('pathsFromCenter')
-inputPathWidth = document.getElementById('pathwidth')
-inputWallWidth = document.getElementById('wallwidth')
-inputOuterWidth = document.getElementById('outerwidth')
-inputPathColor = document.getElementById('pathcolor')
-inputWallColor = document.getElementById('wallcolor')
-inputSeed = document.getElementById('seed')
-buttonRandomSeed = document.getElementById('randomseed')
+const inputRings = document.getElementById('rings')
+const inputPathsFromCenter = document.getElementById('pathsFromCenter')
+const inputPathWidth = document.getElementById('pathwidth')
+const inputWallWidth = document.getElementById('wallwidth')
+const inputOuterWidth = document.getElementById('outerwidth')
+const inputPathColor = document.getElementById('pathcolor')
+const inputWallColor = document.getElementById('wallcolor')
+const inputSeed = document.getElementById('seed')
+const buttonRandomSeed = document.getElementById('randomseed')
 
-settings = {
+const settings = {
   display: function(){
     inputRings.value = rings
     inputPathsFromCenter.value = pointsFromCenter
@@ -144,7 +135,7 @@ buttonRandomSeed.addEventListener('click',function(){
 // Example of a depth first search maze algorithm
 // How or is it different from a recursive backtracking algorithm?
 let counter = 0
-loop = function(){
+const loop = function(){
   r = route[route.length-1][0]|0
   t = route[route.length-1][1]|0
 
@@ -208,7 +199,7 @@ loop = function(){
     return;
   }
 
-  direction = alternatives[random()*alternatives.length|0]
+  const direction = alternatives[random()*alternatives.length|0]
   route.push([direction[0]+r, direction[1]])
 
   let isArc = direction[0] === 0
