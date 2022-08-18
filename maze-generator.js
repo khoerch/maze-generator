@@ -26,7 +26,7 @@ export class MazeGenerator {
     // Maze element details
     this.canvas = this.defineCanvas();
     this.ctx = this.defineCanvasContext();
-    this.matrix = defineMazeMatrix();
+    this.matrix = this.defineMazeMatrix();
 
     // Maze movement details
     this.startingRing = 0;
@@ -116,13 +116,13 @@ export class MazeGenerator {
     const direction = alternatives[this.generateRandomNumber() * alternatives.length | 0];
     const ringDirection = direction[0];
     const angleDirection = direction[1];
-    route.push([ringDirection + ring, angleDirection]);
+    this.route.push([ringDirection + ring, angleDirection]);
   
     let moveOnSameRing = ringDirection === 0;
-    let lastAngle = degreesToRadians(map[ring][theta].angle);
-    let currentAngle = degreesToRadians(map[ringDirection + r][angleDirection].angle);
+    let lastAngle = degreesToRadians(this.matrix[ring][theta].angle);
+    let currentAngle = degreesToRadians(this.matrix[ringDirection + ring][angleDirection].angle);
     let oldRadius = ring * (this.pathWidth + this.wall);
-    let radius = (ringDirection + r) * (this.pathWidth + this.wall);
+    let radius = (ringDirection + ring) * (this.pathWidth + this.wall);
     let arcThenLine = this.factorsOfTwo.includes(ringDirection + ring) && ringDirection > 0;
     let lineThenArc = this.factorsOfTwo.includes(ring) && ringDirection < 0;
     let angleOffset = currentAngle - lastAngle
