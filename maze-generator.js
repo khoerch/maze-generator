@@ -106,8 +106,8 @@ export class MazeGenerator {
       const radiusLength = newRing * (this.pathWidth + this.wall);
       const degreeInRadians = degreesToRadians(this.matrix[newRing][newAngle].angle);
 
-      const xCoordinate = radiusLength * Math.cos(newAngle) + this.mazeRadius;
-      const yCoordinate = radiusLength * Math.cos(newAngle) + this.mazeRadius;
+      const xCoordinate = radiusLength * Math.cos(degreeInRadians) + this.mazeRadius;
+      const yCoordinate = radiusLength * Math.cos(degreeInRadians) + this.mazeRadius;
       this.ctx.moveTo(xCoordinate, yCoordinate);
       this.timer = setTimeout(this.createMaze, this.delay);
     }
@@ -136,8 +136,8 @@ export class MazeGenerator {
       this.ctx.stroke();
     } else if (arcThenLine) {
       // Going from ring with x cells to ring with 2x cells
-      let newX = radius * Math.cos(currentAngle) + this.mazeRadius / 2;
-      let newY = radius * Math.sin(currentAngle) + this.mazeRadius / 2;
+      let newX = radius * Math.cos(currentAngle) + this.mazeRadius;
+      let newY = radius * Math.sin(currentAngle) + this.mazeRadius;
       this.ctx.arc(this.mazeRadius, this.mazeRadius, oldRadius, lastAngle, currentAngle, counterClockwise);
       this.ctx.lineTo(newX, newY);
       this.ctx.stroke();
