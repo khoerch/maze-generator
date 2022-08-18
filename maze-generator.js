@@ -34,8 +34,7 @@ export class MazeGenerator {
     this.route = [[this.startingRing, this.startingAngle]];
   }
 
-  createMaze() {
-    // Define starting position
+  createMaze = () => {
     let ring = this.route[this.route.length - 1][0] | 0;
     let theta = this.route[this.route.length - 1][1] | 0;
     let directions = [];
@@ -128,7 +127,7 @@ export class MazeGenerator {
     let angleOffset = currentAngle - lastAngle
     // TODO: Need to clean up this logic
     let counterClockwise = angleOffset < 0 || (theta === 0 && angleDirection !== 1);
-    if (angleDirection === 0 && t !== 1) {
+    if (angleDirection === 0 && theta !== 1) {
       counterClockwise = false
     }
   
