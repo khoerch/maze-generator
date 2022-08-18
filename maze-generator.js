@@ -32,9 +32,13 @@ export class MazeGenerator {
     this.startingRing = 0;
     this.startingAngle = 0;
     this.route = [[this.startingRing, this.startingAngle]];
+
+    this.counter = 0;
   }
 
   createMaze = () => {
+    this.counter++
+    console.log('Maze iteration: ', this.counter)
     let ring = this.route[this.route.length - 1][0] | 0;
     let theta = this.route[this.route.length - 1][1] | 0;
     let directions = [];
@@ -98,18 +102,19 @@ export class MazeGenerator {
     if (alternatives.length === 0) {
       this.route.pop();
 
-      // If the remaining route length is 0 there are no unvisited cells and the map is complete
-      if (this.route.length === 0) return;
+      if (this.route.length > 0) {
+        const newRing = this.route[this.route.length - 1][0];
+        const newAngle = this.route[this.route.length - 1][1];
+        const radiusLength = newRing * (this.pathWidth + this.wall);
+        const degreeInRadians = degreesToRadians(this.matrix[newRing][newAngle].angle);
 
-      const newRing = this.route[this.route.length - 1][0];
-      const newAngle = this.route[this.route.length - 1][1];
-      const radiusLength = newRing * (this.pathWidth + this.wall);
-      const degreeInRadians = degreesToRadians(this.matrix[newRing][newAngle].angle);
+        const xCoordinate = radiusLength * Math.cos(degreeInRadians) + this.mazeRadius;
+        const yCoordinate = radiusLength * Math.cos(degreeInRadians) + this.mazeRadius;
+        this.ctx.moveTo(xCoordinate, yCoordinate);
+        this.timer = setTimeout(this.createMaze, this.delay);
+      }
 
-      const xCoordinate = radiusLength * Math.cos(degreeInRadians) + this.mazeRadius;
-      const yCoordinate = radiusLength * Math.cos(degreeInRadians) + this.mazeRadius;
-      this.ctx.moveTo(xCoordinate, yCoordinate);
-      this.timer = setTimeout(this.createMaze, this.delay);
+      return;
     }
 
     const direction = alternatives[this.generateRandomNumber() * alternatives.length | 0];
