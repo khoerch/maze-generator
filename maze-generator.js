@@ -35,66 +35,59 @@ export class MazeGenerator {
     this.route = [[this.startingRing, this.startingAngle]];
   }
 
-  getMazeDirections(ring) {
-    let directions = [];
+  defineCanvas() {
+    const canvas = document.getElementById('maze');
+    canvas.width = this.mazeDiameter;
+    canvas.height = this.mazeDiameter;
 
-    if (this.route.length === 1) {
-      // First condition when starting from the center
-      for (let i = 0; i < this.pointsFromCenter; i += 1) {
-        directions.push([1, i]);
-      }
-    } else if (this.factorsOfTwo.includes(ring + 1)) {
-      // Last ring from center with same number of cells. Extra direction option when jumping to next ring
-      directions = [[1, 1], [1, -1], [-1, 0], [0, 1], [0, -1]];
-    } else {
-      // Rings above and below have equal number of cells
-      directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-    }
-
-    return directions;
+    return canvas;
   }
 
-  getOpenAdjacentCells(directions, ring, angle) {
-    const openAdjacentCells = [];
-    for (let i = 0; i < directions.length; i += 1) {
-      let visited = false;
-      const ringMovement = directions[i][0];
-      const angularMovement = directions[i][1];
-      const directedRing = ringMovement + ring;
-      const cellIsOutsideMaze = this.matrix[directedRing] === undefined;
-      if (cellIsOutsideMaze) continue;
+  defineCanvasContext() {
+    const ctx = this.canvas.getContext('2d');
+    ctx.arc(this.mazeRadius, this.mazeRadius, this.mazeRadius, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.wallColor;
+    ctx.fill();
+    ctx.strokeStyle = this.pathColor;
+    ctx.lineCap = 'round';
+    ctx.lineWidth = this.pathWidth;
+    ctx.beginPath();
+    ctx.moveTo(this.mazeRadius, this.mazeRadius);
 
-      // Ring angles are determined based on the number of cells in the ring.
-      // We account for reverting the number of cells back to 0 as the route moves around the ring
-      const angularOptions = this.matrix[directedRing].length;
-      let adjustedAngle;
-  
-      if (this.matrix[directedRing].length === 1) {
-        visited = true;
-      } else if (ringMovement === 1 && this.factorsOfTwo.includes(ring + 1)) {
-        // Checking the right cells in case the next ring doubles in size
-        const halfAdjuster = angularMovement > 0 ? 1 : 0;
-        const directedAngle = 2 * angle + halfAdjuster;
-        adjustedAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle);
-        visited = this.matrix[directedRing][adjustedAngle].visited;
-      } else if (ringMovement === -1 && this.factorsOfTwo.includes(ring)) {
-        // Checking the right cells when going down to a ring with half cells
-        adjustedAngle = Math.floor(angle / 2);
-        visited = this.matrix[directedRing][adjustedAngle].visited;
-      } else {
-        const directedAngle = angularMovement + angle;
-        adjustedAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle);
-        visited = this.matrix[directedRing][adjustedAngle].visited;
+    return ctx;
+  }
+
+  defineMazeMatrix() {
+    // Define all possible locations in the maze per input or default values
+    const matrix = [];
+    let numberOfCellsInRing = this.pointsFromCenter;
+
+    // Predefined details for the very center of the maze
+    matrix[0] = [{
+      angle: 0,
+      visited: true,
+    }];
+
+    for (let i = 1; i <= this.rings; i += 1) {
+      matrix[i] = [];
+      let angle = 0;
+      if (this.factorsOfTwo.includes(i)) {
+        numberOfCellsInRing *= 2;
       }
-  
-      if (!visited) {
-        const adjustedDirection = [ringMovement, adjustedAngle];
-        openAdjacentCells.push(adjustedDirection);
+
+      for (let j = 0; j < numberOfCellsInRing; j += 1) {
+        angle = j * (360 / numberOfCellsInRing);
+        matrix[i][j] = {
+          angle: angle,
+          visited: false,
+        };
       }
     }
 
-    return openAdjacentCells;
+    return matrix;
   }
+
+  // Maze looping logic
 
   createMaze = () => {
     let r = this.route[this.route.length-1][0] | 0;
@@ -162,55 +155,72 @@ export class MazeGenerator {
     this.timer = setTimeout(this.createMaze,this.delay);
   }
 
-  defineCanvas() {
-    const canvas = document.getElementById('maze');
-    canvas.width = this.mazeDiameter;
-    canvas.height = this.mazeDiameter;
+  getMazeDirections(ring) {
+    let directions = [];
 
-    return canvas;
-  }
-
-  defineCanvasContext() {
-    const ctx = this.canvas.getContext('2d');
-    ctx.arc(this.mazeRadius, this.mazeRadius, this.mazeRadius, 0, Math.PI * 2, false);
-    ctx.fillStyle = this.wallColor;
-    ctx.fill();
-    ctx.strokeStyle = this.pathColor;
-    ctx.lineCap = 'round';
-    ctx.lineWidth = this.pathWidth;
-    ctx.beginPath();
-    ctx.moveTo(this.mazeRadius, this.mazeRadius);
-
-    return ctx;
-  }
-
-  defineMazeMatrix() {
-    // Define all possible locations in the maze per input or default values
-    const matrix = [];
-    let numberOfCellsInRing = this.pointsFromCenter;
-
-    // Predefined details for the very center of the maze
-    matrix[0] = [{
-      angle: 0,
-      visited: true,
-    }];
-
-    for (let i = 1; i <= this.rings; i += 1) {
-      matrix[i] = [];
-      let angle = 0;
-      if (this.factorsOfTwo.includes(i)) {
-        numberOfCellsInRing *= 2;
+    if (this.route.length === 1) {
+      // First condition when starting from the center
+      for (let i = 0; i < this.pointsFromCenter; i += 1) {
+        directions.push([1, i]);
       }
+    } else if (this.factorsOfTwo.includes(ring + 1)) {
+      // Last ring from center with same number of cells. Extra direction option when jumping to next ring
+      directions = [[1, 1], [1, -1], [-1, 0], [0, 1], [0, -1]];
+    } else {
+      // Rings above and below have equal number of cells
+      directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    }
 
-      for (let j = 0; j < numberOfCellsInRing; j += 1) {
-        angle = j * (360 / numberOfCellsInRing);
-        matrix[i][j] = {
-          angle: angle,
-          visited: false,
-        };
+    return directions;
+  }
+
+  getOpenAdjacentCells(directions, ring, angle) {
+    const openAdjacentCells = [];
+    for (let i = 0; i < directions.length; i += 1) {
+      let visited = false;
+      const ringMovement = directions[i][0];
+      const angularMovement = directions[i][1];
+      const directedRing = ringMovement + ring;
+
+      const cellIsOutsideMaze = this.matrix[directedRing] === undefined;
+      if (cellIsOutsideMaze) continue;
+
+      // Ring angles are determined based on the number of cells in the ring.
+      // We account for reverting the number of cells back to 0 as the route moves around the ring
+      const angularOptions = this.matrix[directedRing].length;
+      let adjustedAngle;
+  
+      if (this.matrix[directedRing].length === 1) {
+        visited = true;
+      } else if (ringMovement === 1 && this.factorsOfTwo.includes(ring + 1)) {
+        // Checking the right cells in case the next ring doubles in size
+        const halfAdjuster = angularMovement > 0 ? 1 : 0;
+        const directedAngle = 2 * angle + halfAdjuster;
+        if (angularOptions === directedAngle) adjustedAngle = 0;
+        else if (directedAngle === -1) adjustedAngle = angularOptions - 1;
+        else adjustedAngle = directedAngle;
+
+        visited = this.matrix[directedRing][adjustedAngle].visited;
+      } else if (ringMovement === -1 && this.factorsOfTwo.includes(ring)) {
+        // Checking the right cells when going down to a ring with half cells
+        adjustedAngle = Math.floor(angle / 2);
+
+        visited = this.matrix[directedRing][adjustedAngle].visited;
+      } else {
+        const directedAngle = angularMovement + angle;
+        if (angularOptions === directedAngle) adjustedAngle = 0;
+        else if (directedAngle === -1) adjustedAngle = angularOptions - 1;
+        else adjustedAngle = directedAngle;
+
+        visited = this.matrix[directedRing][adjustedAngle].visited;
+      }
+  
+      if (!visited) {
+        const adjustedDirection = [ringMovement, adjustedAngle];
+        openAdjacentCells.push(adjustedDirection);
       }
     }
 
-    return matrix;
+    return openAdjacentCells;
   }
 }
