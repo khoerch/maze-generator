@@ -35,58 +35,70 @@ export class MazeGenerator {
     this.route = [[this.startingRing, this.startingAngle]];
   }
 
-  createMaze = () => {
-    let r = this.route[this.route.length-1][0] | 0;
-    let t = this.route[this.route.length-1][1] | 0;
-  
+  getMazeDirections(currentRing) {
     let directions = [];
-    const alternatives = [];
-  
+
     if (this.route.length === 1) {
       // First condition when starting from the center
       for (let i = 0; i < this.pointsFromCenter; i += 1) {
         directions.push([1, i]);
       }
-    } else if (this.factorsOfTwo.includes(r + 1)) {
+    } else if (this.factorsOfTwo.includes(currentRing + 1)) {
       // Last ring from center with same number of cells. Extra direction option when jumping to next ring
       directions = [[1, 1], [1, -1], [-1, 0], [0, 1], [0, -1]];
     } else {
       // Rings above and below have equal number of cells
       directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
     }
-    
+
+    return directions;
+  }
+
+  getOpenAdjacentCells(directions, currentRing, currentAngle) {
+    const openAdjacentCells = [];
     for (let i = 0; i < directions.length; i += 1) {
-      const outsideMaze = this.matrix[directions[i][0] + r] === undefined;
-      if (outsideMaze) continue;
+      const cellIsOutsideMaze = this.matrix[directions[i][0] + currentRing] === undefined;
+      if (cellIsOutsideMaze) continue;
+
       let visited = false;
       // Since we're using rings, need to account for route going back around to beginning
-      let angularOptions = this.matrix[directions[i][0] + r].length;
-      let directedAngle = directions[i][1] + t;
+      let angularOptions = this.matrix[directions[i][0] + currentRing].length;
+      let directedAngle = directions[i][1] + currentAngle;
       let mapAdjAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle);
   
-      if (this.matrix[directions[i][0] + r].length === 1) {
+      if (this.matrix[directions[i][0] + currentRing].length === 1) {
         visited = true;
-      } else if (directions[i][0] === 1 && this.factorsOfTwo.includes(r + 1)) {
+      } else if (directions[i][0] === 1 && this.factorsOfTwo.includes(currentRing + 1)) {
         // Checking the right cells in case the next ring doubles in size
         let halfAdjuster = directions[i][1] > 0 ? 1 : 0;
-        directedAngle = 2 * t + halfAdjuster;
+        directedAngle = 2 * currentAngle + halfAdjuster;
         mapAdjAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle);
-        visited = this.matrix[directions[i][0] + r][mapAdjAngle].visited;
-      } else if (directions[i][0] === -1 && this.factorsOfTwo.includes(r)) {
+        visited = this.matrix[directions[i][0] + currentRing][mapAdjAngle].visited;
+      } else if (directions[i][0] === -1 && this.factorsOfTwo.includes(currentRing)) {
         // Checking the right cells when going down to a ring with half cells
-        mapAdjAngle = Math.floor(t/2);
-        visited = this.matrix[directions[i][0] + r][mapAdjAngle].visited;
+        mapAdjAngle = Math.floor(currentAngle / 2);
+        visited = this.matrix[directions[i][0] + currentRing][mapAdjAngle].visited;
       } else {
-        visited = this.matrix[directions[i][0] + r][mapAdjAngle].visited;
+        visited = this.matrix[directions[i][0] + currentRing][mapAdjAngle].visited;
       }
   
       if (!visited) {
         const mapAdjDirection = [directions[i][0], mapAdjAngle];
-        alternatives.push(mapAdjDirection);
+        openAdjacentCells.push(mapAdjDirection);
       }
     }
+
+    return openAdjacentCells;
+  }
+
+  createMaze = () => {
+    let r = this.route[this.route.length-1][0] | 0;
+    let t = this.route[this.route.length-1][1] | 0;
+  
+    const directions = this.getMazeDirections(r);
+    const openAdjacentCells = this.getOpenAdjacentCells(directions, r, t);
     
-    if (alternatives.length === 0) {
+    if (openAdjacentCells.length === 0) {
       this.route.pop();
       if (this.route.length > 0) {
         let radius = this.route[this.route.length-1][0] * (this.pathWidth + this.wall);
@@ -99,7 +111,7 @@ export class MazeGenerator {
       return;
     }
   
-    const direction = alternatives[this.generateRandomNumber()*alternatives.length|0];
+    const direction = openAdjacentCells[this.generateRandomNumber()*openAdjacentCells.length|0];
     this.route.push([direction[0] + r, direction[1]]);
   
     let isArc = direction[0] === 0;
