@@ -115,113 +115,113 @@ buttonRandomSeed.addEventListener('click',function(){
 })
 
 // const loop = function(){
-//   r = route[route.length-1][0]|0
-//   t = route[route.length-1][1]|0
+  // r = route[route.length-1][0]|0
+  // t = route[route.length-1][1]|0
 
-//   let directions = []
-//   const alternatives = []
+  // let directions = []
+  // const alternatives = []
 
-//   if (route.length === 1) {
-//     // First condition when starting from the center
-//     for (let i=0; i<pointsFromCenter; i++) {
-//       directions.push([1,i])
-//     }
-//   } else if (doubleSets.includes(r+1)) {
-//     // Last ring from center with same number of cells. Extra direction option when jumping to next ring
-//     directions = [[1,1],[1,-1],[-1,0],[0,1],[0,-1]]
-//   } else {
-//     // Rings above and below have equal number of cells
-//     directions = [[1,0],[-1,0],[0,1],[0,-1]]
-//   }
+  // if (route.length === 1) {
+  //   // First condition when starting from the center
+  //   for (let i=0; i<pointsFromCenter; i++) {
+  //     directions.push([1,i])
+  //   }
+  // } else if (doubleSets.includes(r+1)) {
+  //   // Last ring from center with same number of cells. Extra direction option when jumping to next ring
+  //   directions = [[1,1],[1,-1],[-1,0],[0,1],[0,-1]]
+  // } else {
+  //   // Rings above and below have equal number of cells
+  //   directions = [[1,0],[-1,0],[0,1],[0,-1]]
+  // }
   
-//   for (var i=0; i<directions.length; i++) {
-//     const outsideMaze = map[directions[i][0] + r] === undefined
-//     if (outsideMaze) continue
-//     let visited = false
-//     // Since we're using rings, need to account for route going back around to beginning
-//     let angularOptions = map[directions[i][0] + r].length
-//     let directedAngle = directions[i][1] + t
-//     let mapAdjAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle)
+  // for (var i=0; i<directions.length; i++) {
+  //   const outsideMaze = map[directions[i][0] + r] === undefined
+  //   if (outsideMaze) continue
+  //   let visited = false
+  //   // Since we're using rings, need to account for route going back around to beginning
+  //   let angularOptions = map[directions[i][0] + r].length
+  //   let directedAngle = directions[i][1] + t
+  //   let mapAdjAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle)
 
-//     if (map[directions[i][0] + r].length === 1) {
-//       visited = true
-//     } else if (directions[i][0] === 1 && doubleSets.includes(r+1)) {
-//       // Checking the right cells in case the next ring doubles in size
-//       let halfAdjuster = directions[i][1] > 0 ? 1 : 0
-//       directedAngle = 2 * t + halfAdjuster
-//       mapAdjAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle)
-//       visited = map[directions[i][0] + r][mapAdjAngle].visited
-//     } else if (directions[i][0] === -1 && doubleSets.includes(r)) {
-//       // Checking the right cells when going down to a ring with half cells
-//       mapAdjAngle = Math.floor(t/2)
-//       visited = map[directions[i][0] + r][mapAdjAngle].visited
-//     } else {
-//       visited = map[directions[i][0] + r][mapAdjAngle].visited
-//     }
+  //   if (map[directions[i][0] + r].length === 1) {
+  //     visited = true
+  //   } else if (directions[i][0] === 1 && doubleSets.includes(r+1)) {
+  //     // Checking the right cells in case the next ring doubles in size
+  //     let halfAdjuster = directions[i][1] > 0 ? 1 : 0
+  //     directedAngle = 2 * t + halfAdjuster
+  //     mapAdjAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle)
+  //     visited = map[directions[i][0] + r][mapAdjAngle].visited
+  //   } else if (directions[i][0] === -1 && doubleSets.includes(r)) {
+  //     // Checking the right cells when going down to a ring with half cells
+  //     mapAdjAngle = Math.floor(t/2)
+  //     visited = map[directions[i][0] + r][mapAdjAngle].visited
+  //   } else {
+  //     visited = map[directions[i][0] + r][mapAdjAngle].visited
+  //   }
 
-//     if (!visited) {
-//       const mapAdjDirection = [directions[i][0], mapAdjAngle]
-//       alternatives.push(mapAdjDirection)
-//     }
-//   }
+  //   if (!visited) {
+  //     const mapAdjDirection = [directions[i][0], mapAdjAngle]
+  //     alternatives.push(mapAdjDirection)
+  //   }
+  // }
   
-//   if (alternatives.length === 0) {
-//     route.pop()
-//     if (route.length>0) {
-//       let radius = route[route.length-1][0] * (pathWidth+wall)
-//       let theta = degreesToRadians(map[route[route.length-1][0]][route[route.length-1][1]].angle)
-//       let lastX = radius * Math.cos(theta) + canvas.width / 2
-//       let lastY = radius * Math.sin(theta) + canvas.width / 2
-//       ctx.moveTo(lastX, lastY)
-//       timer = setTimeout(loop,delay)
-//     }
-//     return;
-//   }
+  // if (alternatives.length === 0) {
+  //   route.pop()
+  //   if (route.length>0) {
+  //     let radius = route[route.length-1][0] * (pathWidth+wall)
+  //     let theta = degreesToRadians(map[route[route.length-1][0]][route[route.length-1][1]].angle)
+  //     let lastX = radius * Math.cos(theta) + canvas.width / 2
+  //     let lastY = radius * Math.sin(theta) + canvas.width / 2
+  //     ctx.moveTo(lastX, lastY)
+  //     timer = setTimeout(loop,delay)
+  //   }
+  //   return;
+  // }
 
-//   const direction = alternatives[random()*alternatives.length|0]
-//   route.push([direction[0]+r, direction[1]])
+  // const direction = alternatives[random()*alternatives.length|0]
+  // route.push([direction[0]+r, direction[1]])
 
-//   let isArc = direction[0] === 0
-//   let lastAngle = degreesToRadians(map[r][t].angle)
-//   let theta = degreesToRadians(map[direction[0] + r][direction[1]].angle)
-//   let oldRadius = r * (pathWidth + wall)
-//   let radius = (direction[0] + r) * (pathWidth + wall)
-//   let arcThenLine = doubleSets.includes(direction[0] + r) && direction[0] > 0
-//   let lineThenArc = doubleSets.includes(r) && direction[0] < 0
-//   let angleOffset = theta - lastAngle
-//   // TODO: Need to clean up this logic
-//   let counterClockwise = angleOffset < 0 || (t === 0 && direction[1] !== 1)
-//   if (direction[1] === 0 && t !== 1) {
-//     counterClockwise = false
-//   }
+  // let isArc = direction[0] === 0
+  // let lastAngle = degreesToRadians(map[r][t].angle)
+  // let theta = degreesToRadians(map[direction[0] + r][direction[1]].angle)
+  // let oldRadius = r * (pathWidth + wall)
+  // let radius = (direction[0] + r) * (pathWidth + wall)
+  // let arcThenLine = doubleSets.includes(direction[0] + r) && direction[0] > 0
+  // let lineThenArc = doubleSets.includes(r) && direction[0] < 0
+  // let angleOffset = theta - lastAngle
+  // // TODO: Need to clean up this logic
+  // let counterClockwise = angleOffset < 0 || (t === 0 && direction[1] !== 1)
+  // if (direction[1] === 0 && t !== 1) {
+  //   counterClockwise = false
+  // }
 
-//   if (isArc) {
-//     ctx.arc(canvas.width/2, canvas.width/2, radius, lastAngle, theta, counterClockwise)
-//     ctx.stroke()
-//   } else if (arcThenLine) {
-//     // Going from ring with x cells to ring with 2x cells
-//     let newX = radius * Math.cos(theta) + canvas.width / 2
-//     let newY = radius * Math.sin(theta) + canvas.width / 2
-//     ctx.arc(canvas.width/2, canvas.width/2, oldRadius, lastAngle, theta, counterClockwise)
-//     ctx.lineTo(newX, newY)
-//     ctx.stroke()
+  // if (isArc) {
+  //   ctx.arc(canvas.width/2, canvas.width/2, radius, lastAngle, theta, counterClockwise)
+  //   ctx.stroke()
+  // } else if (arcThenLine) {
+  //   // Going from ring with x cells to ring with 2x cells
+  //   let newX = radius * Math.cos(theta) + canvas.width / 2
+  //   let newY = radius * Math.sin(theta) + canvas.width / 2
+  //   ctx.arc(canvas.width/2, canvas.width/2, oldRadius, lastAngle, theta, counterClockwise)
+  //   ctx.lineTo(newX, newY)
+  //   ctx.stroke()
 
-//   } else if (lineThenArc) {
-//     // Going from ring with x cells to ring with x/2 cells
-//     let newX = radius * Math.cos(lastAngle) + canvas.width / 2
-//     let newY = radius * Math.sin(lastAngle) + canvas.width / 2
-//     ctx.lineTo(newX, newY)
-//     ctx.arc(canvas.width/2, canvas.width/2, radius, lastAngle, theta, counterClockwise)
-//     ctx.stroke()
-//   } else {
-//     let newX = radius * Math.cos(theta) + canvas.width / 2
-//     let newY = radius * Math.sin(theta) + canvas.width / 2
-//     ctx.lineTo(newX, newY)
-//     ctx.stroke()
-//   }
+  // } else if (lineThenArc) {
+  //   // Going from ring with x cells to ring with x/2 cells
+  //   let newX = radius * Math.cos(lastAngle) + canvas.width / 2
+  //   let newY = radius * Math.sin(lastAngle) + canvas.width / 2
+  //   ctx.lineTo(newX, newY)
+  //   ctx.arc(canvas.width/2, canvas.width/2, radius, lastAngle, theta, counterClockwise)
+  //   ctx.stroke()
+  // } else {
+  //   let newX = radius * Math.cos(theta) + canvas.width / 2
+  //   let newY = radius * Math.sin(theta) + canvas.width / 2
+  //   ctx.lineTo(newX, newY)
+  //   ctx.stroke()
+  // }
 
-//   map[direction[0]+r][direction[1]].visited = true
-//   timer = setTimeout(loop,delay)
+  // map[direction[0]+r][direction[1]].visited = true
+  // timer = setTimeout(loop,delay)
 // }
 settings.display()
 // loop()
