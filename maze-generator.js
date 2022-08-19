@@ -13,7 +13,8 @@ export class MazeGenerator {
     this.pathColor = defaults.pathColor;
     this.seed = defaults.seed;
     this.timer = undefined;
-    this.delay = defaults.delay;
+    // this.delay = defaults.delay;
+    this.delay = 250;
 
     // Calculated values
     this.generateRandomNumber = randomNumberGenerator(this.seed);
@@ -32,13 +33,9 @@ export class MazeGenerator {
     this.startingRing = 0;
     this.startingAngle = 0;
     this.route = [[this.startingRing, this.startingAngle]];
-
-    this.counter = 0;
   }
 
   createMaze = () => {
-    this.counter++
-    console.log('Maze iteration: ', this.counter)
     let ring = this.route[this.route.length - 1][0] | 0;
     let theta = this.route[this.route.length - 1][1] | 0;
     let directions = [];
