@@ -35,7 +35,7 @@ export class MazeGenerator {
     this.route = [[this.startingRing, this.startingAngle]];
   }
 
-  getMazeDirections(currentRing) {
+  getMazeDirections(ring) {
     let directions = [];
 
     if (this.route.length === 1) {
@@ -43,7 +43,7 @@ export class MazeGenerator {
       for (let i = 0; i < this.pointsFromCenter; i += 1) {
         directions.push([1, i]);
       }
-    } else if (this.factorsOfTwo.includes(currentRing + 1)) {
+    } else if (this.factorsOfTwo.includes(ring + 1)) {
       // Last ring from center with same number of cells. Extra direction option when jumping to next ring
       directions = [[1, 1], [1, -1], [-1, 0], [0, 1], [0, -1]];
     } else {
@@ -54,37 +54,42 @@ export class MazeGenerator {
     return directions;
   }
 
-  getOpenAdjacentCells(directions, currentRing, currentAngle) {
+  getOpenAdjacentCells(directions, ring, angle) {
     const openAdjacentCells = [];
     for (let i = 0; i < directions.length; i += 1) {
-      const cellIsOutsideMaze = this.matrix[directions[i][0] + currentRing] === undefined;
+      let visited = false;
+      const ringMovement = directions[i][0];
+      const angularMovement = directions[i][1];
+      const directedRing = ringMovement + ring;
+      const cellIsOutsideMaze = this.matrix[directedRing] === undefined;
       if (cellIsOutsideMaze) continue;
 
-      let visited = false;
-      // Since we're using rings, need to account for route going back around to beginning
-      let angularOptions = this.matrix[directions[i][0] + currentRing].length;
-      let directedAngle = directions[i][1] + currentAngle;
-      let mapAdjAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle);
+      // Ring angles are determined based on the number of cells in the ring.
+      // We account for reverting the number of cells back to 0 as the route moves around the ring
+      const angularOptions = this.matrix[directedRing].length;
+      let adjustedAngle;
   
-      if (this.matrix[directions[i][0] + currentRing].length === 1) {
+      if (this.matrix[directedRing].length === 1) {
         visited = true;
-      } else if (directions[i][0] === 1 && this.factorsOfTwo.includes(currentRing + 1)) {
+      } else if (ringMovement === 1 && this.factorsOfTwo.includes(ring + 1)) {
         // Checking the right cells in case the next ring doubles in size
-        let halfAdjuster = directions[i][1] > 0 ? 1 : 0;
-        directedAngle = 2 * currentAngle + halfAdjuster;
-        mapAdjAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle);
-        visited = this.matrix[directions[i][0] + currentRing][mapAdjAngle].visited;
-      } else if (directions[i][0] === -1 && this.factorsOfTwo.includes(currentRing)) {
+        const halfAdjuster = angularMovement > 0 ? 1 : 0;
+        const directedAngle = 2 * angle + halfAdjuster;
+        adjustedAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle);
+        visited = this.matrix[directedRing][adjustedAngle].visited;
+      } else if (ringMovement === -1 && this.factorsOfTwo.includes(ring)) {
         // Checking the right cells when going down to a ring with half cells
-        mapAdjAngle = Math.floor(currentAngle / 2);
-        visited = this.matrix[directions[i][0] + currentRing][mapAdjAngle].visited;
+        adjustedAngle = Math.floor(angle / 2);
+        visited = this.matrix[directedRing][adjustedAngle].visited;
       } else {
-        visited = this.matrix[directions[i][0] + currentRing][mapAdjAngle].visited;
+        const directedAngle = angularMovement + angle;
+        adjustedAngle = angularOptions === directedAngle ? 0 : (directedAngle === -1 ? angularOptions - 1 : directedAngle);
+        visited = this.matrix[directedRing][adjustedAngle].visited;
       }
   
       if (!visited) {
-        const mapAdjDirection = [directions[i][0], mapAdjAngle];
-        openAdjacentCells.push(mapAdjDirection);
+        const adjustedDirection = [ringMovement, adjustedAngle];
+        openAdjacentCells.push(adjustedDirection);
       }
     }
 
