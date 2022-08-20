@@ -88,19 +88,20 @@ export class MazeGenerator {
   // Maze looping logic
 
   createMaze = () => {
-    let r = this.route[this.route.length-1][0] | 0;
-    let t = this.route[this.route.length-1][1] | 0;
+    let ring = this.route[this.route.length - 1][0] | 0;
+    let cell = this.route[this.route.length - 1][1] | 0;
   
-    const directions = this.getMazeDirections(r);
-    const openAdjacentCells = this.getOpenAdjacentCells(directions, r, t);
+    const directions = this.getMazeDirections(ring);
+    const openAdjacentCells = this.getOpenAdjacentCells(directions, ring, cell);
     
     if (openAdjacentCells.length === 0) {
       this.route.pop();
       if (this.route.length > 0) {
-        let radius = this.route[this.route.length-1][0] * (this.pathWidth + this.wallWidth);
-        let theta = degreesToRadians(this.matrix[this.route[this.route.length-1][0]][this.route[this.route.length-1][1]].angle);
-        let lastX = radius * Math.cos(theta) + this.canvas.width / 2;
-        let lastY = radius * Math.sin(theta) + this.canvas.width / 2;
+        const radius = ring * (this.pathWidth + this.wallWidth);
+        const angle = this.matrix[this.route[this.route.length - 1][0]][this.route[this.route.length - 1][1]].angle;
+        const radians = degreesToRadians(angle);
+        const lastX = radius * Math.cos(radians) + this.mazeRadius;
+        const lastY = radius * Math.sin(radians) + this.mazeRadius;
         this.ctx.moveTo(lastX, lastY);
         this.timer = setTimeout(this.createMaze,this.delay);
       }
@@ -108,19 +109,19 @@ export class MazeGenerator {
     }
   
     const direction = openAdjacentCells[this.generateRandomNumber()*openAdjacentCells.length|0];
-    this.route.push([direction[0] + r, direction[1]]);
+    this.route.push([direction[0] + ring, direction[1]]);
   
     let isArc = direction[0] === 0;
-    let lastAngle = degreesToRadians(this.matrix[r][t].angle);
-    let theta = degreesToRadians(this.matrix[direction[0] + r][direction[1]].angle);
-    let oldRadius = r * (this.pathWidth + this.wallWidth);
-    let radius = (direction[0] + r) * (this.pathWidth + this.wallWidth);
-    let arcThenLine = this.factorsOfTwo.includes(direction[0] + r) && direction[0] > 0;
-    let lineThenArc = this.factorsOfTwo.includes(r) && direction[0] < 0;
+    let lastAngle = degreesToRadians(this.matrix[ring][cell].angle);
+    let theta = degreesToRadians(this.matrix[direction[0] + ring][direction[1]].angle);
+    let oldRadius = ring * (this.pathWidth + this.wallWidth);
+    let radius = (direction[0] + ring) * (this.pathWidth + this.wallWidth);
+    let arcThenLine = this.factorsOfTwo.includes(direction[0] + ring) && direction[0] > 0;
+    let lineThenArc = this.factorsOfTwo.includes(ring) && direction[0] < 0;
     let angleOffset = theta - lastAngle;
     // TODO: Need to clean up this logic
-    let counterClockwise = angleOffset < 0 || (t === 0 && direction[1] !== 1);
-    if (direction[1] === 0 && t !== 1) {
+    let counterClockwise = angleOffset < 0 || (cell === 0 && direction[1] !== 1);
+    if (direction[1] === 0 && cell !== 1) {
       counterClockwise = false;
     }
   
@@ -129,27 +130,27 @@ export class MazeGenerator {
       this.ctx.stroke();
     } else if (arcThenLine) {
       // Going from ring with x cells to ring with 2x cells
-      let newX = radius * Math.cos(theta) + this.canvas.width / 2;
-      let newY = radius * Math.sin(theta) + this.canvas.width / 2;
+      let newX = radius * Math.cos(theta) + this.mazeRadius;
+      let newY = radius * Math.sin(theta) + this.mazeRadius;
       this.ctx.arc(this.canvas.width/2, this.canvas.width/2, oldRadius, lastAngle, theta, counterClockwise);
       this.ctx.lineTo(newX, newY);
       this.ctx.stroke();
   
     } else if (lineThenArc) {
       // Going from ring with x cells to ring with x/2 cells
-      let newX = radius * Math.cos(lastAngle) + this.canvas.width / 2;
-      let newY = radius * Math.sin(lastAngle) + this.canvas.width / 2;
+      let newX = radius * Math.cos(lastAngle) + this.mazeRadius;
+      let newY = radius * Math.sin(lastAngle) + this.mazeRadius;
       this.ctx.lineTo(newX, newY);
       this.ctx.arc(this.canvas.width/2, this.canvas.width/2, radius, lastAngle, theta, counterClockwise);
       this.ctx.stroke();
     } else {
-      let newX = radius * Math.cos(theta) + this.canvas.width / 2;
-      let newY = radius * Math.sin(theta) + this.canvas.width / 2;
+      let newX = radius * Math.cos(theta) + this.mazeRadius;
+      let newY = radius * Math.sin(theta) + this.mazeRadius;
       this.ctx.lineTo(newX, newY);
       this.ctx.stroke();
     }
   
-    this.matrix[direction[0] + r][direction[1]].visited = true;
+    this.matrix[direction[0] + ring][direction[1]].visited = true;
     this.timer = setTimeout(this.createMaze, this.delay);
   }
 
