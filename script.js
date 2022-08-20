@@ -1,7 +1,7 @@
 import { defaults } from './defaults.js';
 import { MazeGenerator } from './maze-generator.js';
 
-let { pathWidth, wallWidth, outerWall, rings, pointsFromCenter, delay, seed, wallColor, pathColor } = defaults;
+let { pathWidth, wallWidth, outerWallWidth, rings, pointsFromCenter, delay, seed, wallColor, pathColor } = defaults;
 
 let r = 0 //Radial starting position from center
 let t = 0 //Angular starting position from center
@@ -13,7 +13,7 @@ const input = {
   pointsFromCenter: document.getElementById('pointsFromCenter'),
   pathWidth: document.getElementById('pathwidth'),
   wallWidth: document.getElementById('wallwidth'),
-  outerWallWidth: document.getElementById('outerwidth'),
+  outerWallWidth: document.getElementById('outerWallWidth'),
   pathColor: document.getElementById('pathcolor'),
   wallColor: document.getElementById('wallcolor'),
   delay: document.getElementById('delay'),
@@ -25,7 +25,7 @@ const inputRings = document.getElementById('rings');
 const inputPointsFromCenter = document.getElementById('pointsFromCenter');
 const inputPathWidth = document.getElementById('pathwidth');
 const inputWallWidth = document.getElementById('wallwidth');
-const inputOuterWidth = document.getElementById('outerwidth');
+const inputOuterWallWidth = document.getElementById('outerWallWidth');
 const inputPathColor = document.getElementById('pathcolor');
 const inputWallColor = document.getElementById('wallcolor');
 const inputDelay = document.getElementById('delay');
@@ -38,7 +38,7 @@ const settings = {
     input.pointsFromCenter.value = pointsFromCenter;
     input.pathWidth.value = pathWidth;
     input.wallWidth.value = wallWidth;
-    input.outerWallWidth.value = outerWall;
+    input.outerWallWidth.value = outerWallWidth;
     input.pathColor.value = pathColor;
     input.wallColor.value = wallColor;
     input.delay.value = delay;
@@ -50,7 +50,7 @@ const settings = {
       inputPointsFromCenter.value != pointsFromCenter||
       inputPathWidth.value != pathWidth||
       inputWallWidth.value != wallWidth||
-      inputOuterWidth.value != outerWall||
+      inputOuterWallWidth.value != outerWallWidth||
       inputPathColor.value != pathColor||
       inputWallColor.value != wallColor||
       inputSeed.value != seed
@@ -64,7 +64,7 @@ const settings = {
     pointsFromCenter = parseFloat(inputPointsFromCenter.value)
     pathWidth = parseFloat(inputPathWidth.value)
     wallWidth = parseFloat(inputWallWidth.value)
-    outerWall = parseFloat(inputOuterWidth.value)
+    outerWallWidth = parseFloat(inputOuterWallWidth.value)
     pathColor = inputPathColor.value
     wallColor = inputWallColor.value
     seed = parseFloat(inputSeed.value)

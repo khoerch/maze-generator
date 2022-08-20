@@ -4,7 +4,7 @@ export class MazeGenerator {
   constructor(input = {}) {
     // Default values
     this.pointsFromCenter = input.pointsFromCenter;
-    this.outerWall = input.outerWall;
+    this.outerWallWidth = input.outerWallWidth;
     this.pathWidth = input.pathWidth;
     this.rings = input.rings;
     this.wallWidth = input.wallWidth;
@@ -15,7 +15,7 @@ export class MazeGenerator {
 
     // Calculated values
     this.generateRandomNumber = randomNumberGenerator(this.seed);
-    this.mazeDiameter = this.outerWall * 2
+    this.mazeDiameter = this.outerWallWidth * 2
       + this.pathWidth
       + 2 * this.rings * (this.pathWidth + this.wallWidth);
     this.mazeRadius = this.mazeDiameter / 2;
