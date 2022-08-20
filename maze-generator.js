@@ -1,20 +1,17 @@
-import { defaults } from './defaults.js';
 import { degreesToRadians, getFactorsOfTwo, randomNumberGenerator } from './utils.js';
 
 export class MazeGenerator {
-  constructor() {
+  constructor(input = {}) {
     // Default values
-    this.pointsFromCenter = defaults.pointsFromCenter;
-    this.outerWall = defaults.outerWall;
-    this.pathWidth = defaults.pathWidth;
-    this.rings = defaults.rings;
-    this.wall = defaults.wall;
-    this.wallColor = defaults.wallColor;
-    this.pathColor = defaults.pathColor;
-    this.seed = defaults.seed;
-    this.timer = undefined;
-    this.delay = defaults.delay;
-    // this.delay = 250;
+    this.pointsFromCenter = input.pointsFromCenter;
+    this.outerWall = input.outerWall;
+    this.pathWidth = input.pathWidth;
+    this.rings = input.rings;
+    this.wall = input.wall;
+    this.wallColor = input.wallColor;
+    this.pathColor = input.pathColor;
+    this.seed = input.seed;
+    this.delay = input.delay;
 
     // Calculated values
     this.generateRandomNumber = randomNumberGenerator(this.seed);
@@ -33,6 +30,7 @@ export class MazeGenerator {
     this.startingRing = 0;
     this.startingAngle = 0;
     this.route = [[this.startingRing, this.startingAngle]];
+    this.timer = undefined;
   }
 
   defineCanvas() {

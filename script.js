@@ -6,7 +6,7 @@ let { pathWidth, wall, outerWall, rings, pointsFromCenter, delay, seed, wallColo
 let r = 0 //Radial starting position from center
 let t = 0 //Angular starting position from center
 
-let maze = new MazeGenerator();
+let maze = new MazeGenerator(defaults);
 
 const inputRings = document.getElementById('rings');
 const inputPathsFromCenter = document.getElementById('pathsFromCenter');
