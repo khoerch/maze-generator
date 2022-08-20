@@ -152,7 +152,7 @@ export class MazeGenerator {
     }
   
     this.matrix[direction[0] + r][direction[1]].visited = true;
-    this.timer = setTimeout(this.createMaze,this.delay);
+    this.timer = setTimeout(this.createMaze, this.delay);
   }
 
   getMazeDirections(ring) {
