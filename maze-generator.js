@@ -108,17 +108,18 @@ export class MazeGenerator {
       return;
     }
   
-    const direction = openAdjacentCells[this.generateRandomNumber()*openAdjacentCells.length|0];
+    const randomOption = this.generateRandomNumber() * openAdjacentCells.length | 0;
+    const direction = openAdjacentCells[randomOption];
     this.route.push([direction[0] + ring, direction[1]]);
   
-    let isArc = direction[0] === 0;
-    let lastAngle = degreesToRadians(this.matrix[ring][cell].angle);
-    let theta = degreesToRadians(this.matrix[direction[0] + ring][direction[1]].angle);
-    let oldRadius = ring * (this.pathWidth + this.wallWidth);
-    let radius = (direction[0] + ring) * (this.pathWidth + this.wallWidth);
-    let arcThenLine = this.factorsOfTwo.includes(direction[0] + ring) && direction[0] > 0;
-    let lineThenArc = this.factorsOfTwo.includes(ring) && direction[0] < 0;
-    let angleOffset = theta - lastAngle;
+    const isArc = direction[0] === 0;
+    const lastAngle = degreesToRadians(this.matrix[ring][cell].angle);
+    const radians = degreesToRadians(this.matrix[direction[0] + ring][direction[1]].angle);
+    const oldRadius = ring * (this.pathWidth + this.wallWidth);
+    const radius = (direction[0] + ring) * (this.pathWidth + this.wallWidth);
+    const arcThenLine = this.factorsOfTwo.includes(direction[0] + ring) && direction[0] > 0;
+    const lineThenArc = this.factorsOfTwo.includes(ring) && direction[0] < 0;
+    const angleOffset = radians - lastAngle;
     // TODO: Need to clean up this logic
     let counterClockwise = angleOffset < 0 || (cell === 0 && direction[1] !== 1);
     if (direction[1] === 0 && cell !== 1) {
@@ -126,26 +127,26 @@ export class MazeGenerator {
     }
   
     if (isArc) {
-      this.ctx.arc(this.canvas.width/2, this.canvas.width/2, radius, lastAngle, theta, counterClockwise);
+      this.ctx.arc(this.canvas.width/2, this.canvas.width/2, radius, lastAngle, radians, counterClockwise);
       this.ctx.stroke();
     } else if (arcThenLine) {
       // Going from ring with x cells to ring with 2x cells
-      let newX = radius * Math.cos(theta) + this.mazeRadius;
-      let newY = radius * Math.sin(theta) + this.mazeRadius;
-      this.ctx.arc(this.canvas.width/2, this.canvas.width/2, oldRadius, lastAngle, theta, counterClockwise);
+      const newX = radius * Math.cos(radians) + this.mazeRadius;
+      const newY = radius * Math.sin(radians) + this.mazeRadius;
+      this.ctx.arc(this.canvas.width/2, this.canvas.width/2, oldRadius, lastAngle, radians, counterClockwise);
       this.ctx.lineTo(newX, newY);
       this.ctx.stroke();
   
     } else if (lineThenArc) {
       // Going from ring with x cells to ring with x/2 cells
-      let newX = radius * Math.cos(lastAngle) + this.mazeRadius;
-      let newY = radius * Math.sin(lastAngle) + this.mazeRadius;
+      const newX = radius * Math.cos(lastAngle) + this.mazeRadius;
+      const newY = radius * Math.sin(lastAngle) + this.mazeRadius;
       this.ctx.lineTo(newX, newY);
-      this.ctx.arc(this.canvas.width/2, this.canvas.width/2, radius, lastAngle, theta, counterClockwise);
+      this.ctx.arc(this.canvas.width/2, this.canvas.width/2, radius, lastAngle, radians, counterClockwise);
       this.ctx.stroke();
     } else {
-      let newX = radius * Math.cos(theta) + this.mazeRadius;
-      let newY = radius * Math.sin(theta) + this.mazeRadius;
+      const newX = radius * Math.cos(radians) + this.mazeRadius;
+      const newY = radius * Math.sin(radians) + this.mazeRadius;
       this.ctx.lineTo(newX, newY);
       this.ctx.stroke();
     }
