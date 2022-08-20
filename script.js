@@ -15,6 +15,7 @@ const inputWallWidth = document.getElementById('wallwidth');
 const inputOuterWidth = document.getElementById('outerwidth');
 const inputPathColor = document.getElementById('pathcolor');
 const inputWallColor = document.getElementById('wallcolor');
+const inputDelay = document.getElementById('delay');
 const inputSeed = document.getElementById('seed');
 const buttonRandomSeed = document.getElementById('randomseed');
 
@@ -27,6 +28,7 @@ const settings = {
     inputOuterWidth.value = outerWall
     inputPathColor.value = pathColor
     inputWallColor.value = wallColor
+    inputDelay.value = delay
     inputSeed.value = seed
   },
   check: function(){
