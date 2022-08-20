@@ -2,7 +2,6 @@ import { degreesToRadians, getFactorsOfTwo, randomNumberGenerator } from './util
 
 export class MazeGenerator {
   constructor(input = {}) {
-    console.log(input)
     // Default values
     this.pointsFromCenter = input.pointsFromCenter;
     this.outerWall = input.outerWall;

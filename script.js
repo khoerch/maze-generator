@@ -10,7 +10,7 @@ let maze = new MazeGenerator(defaults);
 
 const input = {
   rings: document.getElementById('rings'),
-  pathsFromCenter: document.getElementById('pathsFromCenter'),
+  pointsFromCenter: document.getElementById('pointsFromCenter'),
   pathWidth: document.getElementById('pathwidth'),
   wallWidth: document.getElementById('wallwidth'),
   outerWallWidth: document.getElementById('outerwidth'),
@@ -22,7 +22,7 @@ const input = {
 }
 
 const inputRings = document.getElementById('rings');
-const inputPathsFromCenter = document.getElementById('pathsFromCenter');
+const inputPointsFromCenter = document.getElementById('pointsFromCenter');
 const inputPathWidth = document.getElementById('pathwidth');
 const inputWallWidth = document.getElementById('wallwidth');
 const inputOuterWidth = document.getElementById('outerwidth');
@@ -35,7 +35,7 @@ const buttonRandomSeed = document.getElementById('randomseed');
 const settings = {
   display: () => {
     input.rings.value = rings;
-    input.pathsFromCenter.value = pointsFromCenter;
+    input.pointsFromCenter.value = pointsFromCenter;
     input.pathWidth.value = pathWidth;
     input.wallWidth.value = wallWidth;
     input.outerWallWidth.value = outerWall;
@@ -47,7 +47,7 @@ const settings = {
   check: () => {
     if (
       inputRings.value != rings||
-      inputPathsFromCenter.value != pointsFromCenter||
+      inputPointsFromCenter.value != pointsFromCenter||
       inputPathWidth.value != pathWidth||
       inputWallWidth.value != wallWidth||
       inputOuterWidth.value != outerWall||
@@ -61,7 +61,7 @@ const settings = {
   update: function(){
     clearTimeout(maze.timer)
     rings = parseFloat(inputRings.value)
-    pointsFromCenter = parseFloat(inputPathsFromCenter.value)
+    pointsFromCenter = parseFloat(inputPointsFromCenter.value)
     pathWidth = parseFloat(inputPathWidth.value)
     wallWidth = parseFloat(inputWallWidth.value)
     outerWall = parseFloat(inputOuterWidth.value)
