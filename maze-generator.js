@@ -2,12 +2,13 @@ import { degreesToRadians, getFactorsOfTwo, randomNumberGenerator } from './util
 
 export class MazeGenerator {
   constructor(input = {}) {
+    console.log(input)
     // Default values
     this.pointsFromCenter = input.pointsFromCenter;
     this.outerWall = input.outerWall;
     this.pathWidth = input.pathWidth;
     this.rings = input.rings;
-    this.wall = input.wall;
+    this.wallWidth = input.wallWidth;
     this.wallColor = input.wallColor;
     this.pathColor = input.pathColor;
     this.seed = input.seed;
@@ -17,7 +18,7 @@ export class MazeGenerator {
     this.generateRandomNumber = randomNumberGenerator(this.seed);
     this.mazeDiameter = this.outerWall * 2
       + this.pathWidth
-      + 2 * this.rings * (this.pathWidth + this.wall);
+      + 2 * this.rings * (this.pathWidth + this.wallWidth);
     this.mazeRadius = this.mazeDiameter / 2;
     this.factorsOfTwo = getFactorsOfTwo(this.rings);
 
@@ -97,7 +98,7 @@ export class MazeGenerator {
     if (openAdjacentCells.length === 0) {
       this.route.pop();
       if (this.route.length > 0) {
-        let radius = this.route[this.route.length-1][0] * (this.pathWidth + this.wall);
+        let radius = this.route[this.route.length-1][0] * (this.pathWidth + this.wallWidth);
         let theta = degreesToRadians(this.matrix[this.route[this.route.length-1][0]][this.route[this.route.length-1][1]].angle);
         let lastX = radius * Math.cos(theta) + this.canvas.width / 2;
         let lastY = radius * Math.sin(theta) + this.canvas.width / 2;
@@ -113,8 +114,8 @@ export class MazeGenerator {
     let isArc = direction[0] === 0;
     let lastAngle = degreesToRadians(this.matrix[r][t].angle);
     let theta = degreesToRadians(this.matrix[direction[0] + r][direction[1]].angle);
-    let oldRadius = r * (this.pathWidth + this.wall);
-    let radius = (direction[0] + r) * (this.pathWidth + this.wall);
+    let oldRadius = r * (this.pathWidth + this.wallWidth);
+    let radius = (direction[0] + r) * (this.pathWidth + this.wallWidth);
     let arcThenLine = this.factorsOfTwo.includes(direction[0] + r) && direction[0] > 0;
     let lineThenArc = this.factorsOfTwo.includes(r) && direction[0] < 0;
     let angleOffset = theta - lastAngle;

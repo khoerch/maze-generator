@@ -1,6 +1,6 @@
 export const defaults = {
   pathWidth: 15, //Width of the Maze Path
-  wall: 8, //Width of the Walls between Paths
+  wallWidth: 8, //Width of the Walls between Paths
   outerWall: 8, //Width of the Outer most wall
   rings: 6, //Number of concentric rings surrounding center
   pointsFromCenter: 4, //How many paths diverge from center
