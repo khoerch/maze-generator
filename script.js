@@ -16,18 +16,7 @@ const input = {
   delay: document.getElementById('delay'),
   seed: document.getElementById('seed'),
   buttonRandomSeed: document.getElementById('randomseed'),
-}
-
-const inputRings = document.getElementById('rings');
-const inputPointsFromCenter = document.getElementById('pointsFromCenter');
-const inputPathWidth = document.getElementById('pathwidth');
-const inputWallWidth = document.getElementById('wallwidth');
-const inputOuterWallWidth = document.getElementById('outerWallWidth');
-const inputPathColor = document.getElementById('pathcolor');
-const inputWallColor = document.getElementById('wallcolor');
-const inputDelay = document.getElementById('delay');
-const inputSeed = document.getElementById('seed');
-const buttonRandomSeed = document.getElementById('randomseed');
+};
 
 const settings = {
   display: () => {
@@ -42,37 +31,49 @@ const settings = {
     input.seed.value = seed;
   },
   check: () => {
-    if (
-      input.rings.value != rings ||
+    const valuesHaveChanged = input.rings.value != rings ||
       input.pointsFromCenter.value != pointsFromCenter ||
       input.pathWidth.value != pathWidth ||
       input.wallWidth.value != wallWidth ||
       input.outerWallWidth.value != outerWallWidth ||
       input.pathColor.value != pathColor ||
       input.wallColor.value != wallColor ||
-      input.seed.value != seed
-    ){
-      settings.update()
-    }
+      input.delay.value != delay ||
+      input.seed.value != seed;
+
+    if (valuesHaveChanged) settings.update();
   },
   update: () => {
-    clearTimeout(maze.timer)
-    rings = parseFloat(inputRings.value)
-    pointsFromCenter = parseFloat(inputPointsFromCenter.value)
-    pathWidth = parseFloat(inputPathWidth.value)
-    wallWidth = parseFloat(inputWallWidth.value)
-    outerWallWidth = parseFloat(inputOuterWallWidth.value)
-    pathColor = inputPathColor.value
-    wallColor = inputWallColor.value
-    seed = parseFloat(inputSeed.value)
+    clearTimeout(maze.timer);
+    rings = parseFloat(input.rings.value)
+    pointsFromCenter = parseFloat(input.pointsFromCenter.value)
+    pathWidth = parseFloat(input.pathWidth.value)
+    wallWidth = parseFloat(input.wallWidth.value)
+    outerWallWidth = parseFloat(input.outerWallWidth.value)
+    pathColor = input.pathColor.value
+    wallColor = input.wallColor.value
+    delay = parseFloat(input.delay.value)
+    seed = parseFloat(input.seed.value)
 
-    maze = new MazeGenerator(defaults);
+    const updatedInput = {
+      rings,
+      pointsFromCenter,
+      pathWidth,
+      wallWidth,
+      outerWallWidth,
+      pathColor,
+      wallColor,
+      delay,
+      seed,
+    }
+
+    maze = new MazeGenerator(updatedInput);
     maze.createMaze();
   },
 }
 
-buttonRandomSeed.addEventListener('click', () => {
-  inputSeed.value = Math.random()*100000|0
+input.buttonRandomSeed.addEventListener('click', () => {
+  input.seed.value = Math.random() * 100000 | 0;
 });
 
 settings.display();
