@@ -3,9 +3,6 @@ import { MazeGenerator } from './maze-generator.js';
 
 let { pathWidth, wallWidth, outerWallWidth, rings, pointsFromCenter, delay, seed, wallColor, pathColor } = defaults;
 
-let r = 0 //Radial starting position from center
-let t = 0 //Angular starting position from center
-
 let maze = new MazeGenerator(defaults);
 
 const input = {
@@ -46,19 +43,19 @@ const settings = {
   },
   check: () => {
     if (
-      inputRings.value != rings||
-      inputPointsFromCenter.value != pointsFromCenter||
-      inputPathWidth.value != pathWidth||
-      inputWallWidth.value != wallWidth||
-      inputOuterWallWidth.value != outerWallWidth||
-      inputPathColor.value != pathColor||
-      inputWallColor.value != wallColor||
-      inputSeed.value != seed
+      input.rings.value != rings ||
+      input.pointsFromCenter.value != pointsFromCenter ||
+      input.pathWidth.value != pathWidth ||
+      input.wallWidth.value != wallWidth ||
+      input.outerWallWidth.value != outerWallWidth ||
+      input.pathColor.value != pathColor ||
+      input.wallColor.value != wallColor ||
+      input.seed.value != seed
     ){
       settings.update()
     }
   },
-  update: function(){
+  update: () => {
     clearTimeout(maze.timer)
     rings = parseFloat(inputRings.value)
     pointsFromCenter = parseFloat(inputPointsFromCenter.value)
@@ -68,11 +65,10 @@ const settings = {
     pathColor = inputPathColor.value
     wallColor = inputWallColor.value
     seed = parseFloat(inputSeed.value)
-    r = 0
-    t = 0
+
     maze = new MazeGenerator(defaults);
     maze.createMaze();
-  }
+  },
 }
 
 buttonRandomSeed.addEventListener('click', () => {
